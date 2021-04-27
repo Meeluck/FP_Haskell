@@ -29,3 +29,8 @@ fibN_Tail x = fibN_Tail' x 0 1
 
 
 -- Упражнение 2
+fibMap:: [Integer]
+fibMap = map fibN_Tail [0,1..] 
+
+fibZipWith :: [Integer]
+fibZipWith = 0 : 1 : zipWith (+) fibZipWith (tail fibZipWith)
