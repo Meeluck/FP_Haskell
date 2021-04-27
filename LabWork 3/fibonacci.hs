@@ -34,3 +34,17 @@ fibMap = map fibN_Tail [0,1..]
 
 fibZipWith :: [Integer]
 fibZipWith = 0 : 1 : zipWith (+) fibZipWith (tail fibZipWith)
+
+-- Упражнение 3
+
+myDiv :: Integer -> Integer -> (Integer, Integer)
+myDiv x y | y == 0 = error "Divide by zero"
+myDiv x y | x == 0 = (0,0)
+myDiv x y | (x > 0 && y > 0) || (x < 0 && y < 0) = myDiv' x y 0 x
+    where
+        myDiv' x y n m | m >= 0 && m < (abs y) = (n,m) 
+        myDiv' x y n m = myDiv' x y (n+1) (m-y)
+myDiv x y = myDiv'' x y 0 x
+    where
+        myDiv'' x y n m | m >= 0 && m < (abs y) = (n,m)
+        myDiv'' x y n m= myDiv'' x y (n-1) (m+y) 
