@@ -1,0 +1,1 @@
+fibN :: Integer -> Integer
