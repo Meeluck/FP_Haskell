@@ -36,15 +36,18 @@ fibZipWith :: [Integer]
 fibZipWith = 0 : 1 : zipWith (+) fibZipWith (tail fibZipWith)
 
 -- Упражнение 3
-
 myDiv :: Integer -> Integer -> (Integer, Integer)
-myDiv x y | y == 0 = error "Divide by zero"
-myDiv x y | x == 0 = (0,0)
-myDiv x y | (x > 0 && y > 0) || (x < 0 && y < 0) = myDiv' x y 0 x
+myDiv x 0 = error "Divide by zero"
+myDiv 0 y = (0,0)
+myDiv x y |  (x > 0 && y > 0) || (x < 0 && y < 0) = myDiv' (abs x) (abs y) 0
+    where 
+        myDiv' x y z |  x < y = (z,x)
+        myDiv' x y z = myDiv' (x-y) y (z+1)
+myDiv x y | x < 0 && y > 0 = myDiv'' x y 0
+    where 
+        myDiv'' x y z | (abs x) < y = (z,x)
+        myDiv'' x y z = myDiv'' (x+y) y (z-1)
+myDiv x y | x > 0 && y < 0 = myDiv''' x y 0
     where
-        myDiv' x y n m | m >= 0 && m < (abs y) = (n,m) 
-        myDiv' x y n m = myDiv' x y (n+1) (m-y)
-myDiv x y = myDiv'' x y 0 x
-    where
-        myDiv'' x y n m | m >= 0 && m < (abs y) = (n,m)
-        myDiv'' x y n m= myDiv'' x y (n-1) (m+y) 
+        myDiv''' x y z | x < (abs y) = (z, (-x))
+        myDiv''' x y z = myDiv''' (x - (abs y)) y (z-1)  
