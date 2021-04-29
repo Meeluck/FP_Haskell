@@ -24,7 +24,7 @@ instance Applicative Tree where
     pure (.) <*> Leaf u <*> Leaf v <*> Leaf w 
     = Leaf (.) <*> Leaf u <*> Leaf v <*> Leaf w
     = Leaf (u.) <*> Leaf v <*> Leaf w
-    = Leaf (u.v) <*> Leaf w
+    = Leaf (u.v) <*> Leaf w 
     = Leaf (u.v w) 
     = Leaf(u (v w))
     
