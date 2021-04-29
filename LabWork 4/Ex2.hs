@@ -20,7 +20,8 @@ instance Applicative Tree where
 -- Композиция
 
 -- pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
- 1) pure (.) <*> Leaf u <*> Leaf v <*> Leaf w 
+ 1) pure (.) <*> Leaf u <*> Leaf v <*> Leaf w =  Leaf u <*> ( Leaf v <*> Leaf w) 
+    pure (.) <*> Leaf u <*> Leaf v <*> Leaf w 
     = Leaf (.) <*> Leaf u <*> Leaf v <*> Leaf w
     = Leaf (u.) <*> Leaf v <*> Leaf w
     = Leaf (u.v) <*> Leaf w
@@ -63,7 +64,30 @@ instance Applicative Tree where
     ||
     Branch(pure (u.) <*> v1 <*> Leaf w) (pure(u.) <*> v2 <*> Leaf w)
 
-3) 
+
+
+
+3) pure (.) <*> Leaf u <*> Leaf v <*> Branch(w1 w2) =  Leaf u <*> ( Leaf v <*> Branch(w1 w2)) 
+
+    pure (.) <*> Leaf u <*> Leaf v <*> Branch(w1 w2)
+    = Leaf (.) <*> Leaf u <*> Leaf v <*> Branch(w1 w2)
+    = Leaf (u.) <*> Leaf v <*> Branch(w1 w2)
+    = Leaf (u.v) <*> Branch(w1 w2)
+    --(Leaf f) <*> (Branch x y) = Branch (f <$> x) (f <$> y)
+    = Branch (u.v <$> w1) (u.v <$> w2)
+    = Branch (u <$> (v <$> w1)) (u <$> (v <$> w2))
+
+     Leaf u <*> ( Leaf v <*> Branch(w1 w2)) 
+     --(Leaf f) <*> (Branch x y) = Branch (f <$> x) (f <$> y)
+     = Leaf u <*> Branch(v <$> w1) (v <$> w2)
+     = Branch (u <$> (v <$> w1)) (u <$> (v <$> w2))
+
+    Branch (u <$> (v <$> w1)) (u <$> (v <$> w2))
+    ||
+    Branch (u <$> (v <$> w1)) (u <$> (v <$> w2))
+
+4) 
+
 -- Гомоморфизм
     pure f <*> pure x = pure (f x)
     
