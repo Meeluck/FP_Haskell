@@ -110,10 +110,76 @@ instance Applicative Tree where
     ||
     Branch(pure(u.)<*> v1 <*> w1) (pure(u.)<*> v2 <*> w2)
 
-5)
-6)
-7)
-8)
+5) pure (.) <*> Branch (u1 u2) <*>  Branch(v1 v2) <*> Branch(w1 w2) =  Branch (u1 u2) <*> ( Branch(v1 v2) <*> Branch(w1 w2)) 
+
+    pure (.) <*> Branch (u1 u2) <*>  Branch(v1 v2) <*> Branch(w1 w2) 
+    = Leaf(.) <*> Branch (u1 u2) <*>  Branch(v1 v2) <*> Branch(w1 w2) 
+    = Branch (((.) <$> u1) ((.) <$> u2)) <*>  Branch(v1 v2) <*> Branch(w1 w2) 
+    = Branch(((.) <$> u1) <*> v1 ((.) <$> u2) <*> v2) <*> Branch(w1 w2) 
+    = Branch((.)<$> u1 <*> v1 <*> w1)((.)<$> u2 <*> v2 <*> w2)
+    = Branch(pure(.)<*>u1 <*> v1 <*> w1) (pure(.)<*>u2 <*> v2 <*> w2)
+    = Branch (u1 <*> (v1 <*> w1)) (u2 <*> (v2 <*> w2)))
+
+    Branch (u1 u2) <*> ( Branch(v1 v2) <*> Branch(w1 w2)) 
+    = Branch (u1 u2) <*> Branch((v1<*>w1)(v2<*>w2))
+    = Branch (u1 <*> (v1 <*> w1)) (u2 <*> (v2 <*> w2)))
+
+    Branch (u1 <*> (v1 <*> w1)) (u2 <*> (v2 <*> w2)))
+    ||
+    Branch (u1 <*> (v1 <*> w1)) (u2 <*> (v2 <*> w2)))
+
+6) pure (.) <*> Branch (u1 u2) <*>  Branch(v1 v2) <*> Leaf(w) =  Branch (u1 u2) <*> ( Branch(v1 v2) <*> Leaf(w)) 
+
+    pure (.) <*> Branch (u1 u2) <*>  Branch(v1 v2) <*> Leaf(w) 
+    = Leaf(.) <*> Branch (u1 u2) <*>  Branch(v1 v2) <*> Leaf(w) 
+    = Branch (((.) <$> u1) ((.) <$> u2)) <*>  Branch(v1 v2) <*> Leaf(w) ) 
+    = Branch(((.) <$> u1 <*> v1) ((.) <$> u2 <*> v2)) <*> Leaf(w) 
+    = Branch((.) <$> u1 <*> v1 <*> Leaf(w)) ((.) <$> u2 <*> v2 <*> Leaf(w))
+    = Branch (u1 <*> (v1 <*> Leaf(w))) (u2 <*> (v2 <*> Leaf(w)))
+
+     Branch (u1 u2) <*> (Branch(v1 v2) <*> Leaf(w)) 
+     = Branch (u1 u2) <*>  Branch ((v1 <*> Leaf w) (v2 <*> Leaf w))
+     = Branch (u1 <*> (v1 <*> Leaf(w))) (u2 <*> (v2 <*> Leaf(w)))
+
+    = Branch (u1 <*> (v1 <*> Leaf(w))) (u2 <*> (v2 <*> Leaf(w)))
+    ||
+    = Branch (u1 <*> (v1 <*> Leaf(w))) (u2 <*> (v2 <*> Leaf(w)))
+
+7)  pure (.) <*> Branch (u1 u2) <*> Leaf(v) <*> Leaf(w) =  Branch (u1 u2) <*> (Leaf(v) <*> Leaf(w)) 
+
+    pure (.) <*> Branch (u1 u2) <*> Leaf(v) <*> Leaf(w)
+    = Branch (((.) <$> u1) ((.) <$> u2)) <*> Leaf(v) <*> Leaf(w)
+    = Branch (((.) <$> u1 <*> Leaf(v)) ((.) <$> u2 <*> Leaf(v))) <*> Leaf(w)
+    = Branch ((.) <$> u1 <*> Leaf(v) <*> Leaf(w)) ((.) <$> u2 <*> Leaf(v) <*> Leaf(w))
+    = Branch (u1 <*> (Leaf(v) <*> Leaf(w))) (u2 <*> (Leaf(v) <*> Leaf(w)))
+    = Branch (u1 <*> Leaf(v w)) (u2 <*> Leaf(v w))
+
+    Branch (u1 u2) <*> (Leaf(v) <*> Leaf(w)) 
+    = Branch (u1 u2) <*> Leaf(v w)
+    = Branch (u1 <*> Leaf(v w)) (u2 <*> Leaf(v w))
+
+    Branch (u1 <*> Leaf(v w)) (u2 <*> Leaf(v w))
+    ||
+    Branch (u1 <*> Leaf(v w)) (u2 <*> Leaf(v w))
+
+8) pure (.) <*> Branch (u1 u2) <*> Leaf(v) <*> Branch (w1 w2) =  Branch (u1 u2) <*> (Leaf(v) <*> Branch (w1 w2)) 
+
+    pure (.) <*> Branch (u1 u2) <*> Leaf(v) <*> Branch (w1 w2)
+    = Branch (((.) <$> u1) ((.) <$> u2) <*> Leaf(v) <*> Branch (w1 w2)
+    = Branch (((.) <$> u1 <*> Leaf(v)) ((.) <$> u2 <*> Leaf(v))) <*> Branch (w1 w2)
+    = Branch ((.) <$> u1 <*> Leaf(v) <*> w1) ((.) <$> u2 <*> Leaf(v) <*> w2)
+    = Branch (u1 <*> (Leaf(v) <*> w1)) (u2 <*> (Leaf(v) <*> w2))
+
+    Branch (u1 u2) <*> (Leaf(v) <*> Branch (w1 w2)) 
+    = Branch (u1 u2) <*> Branch ((v <$> w1) (v <$> w2))
+    = Branch (u1<*> (v <$> w1)) (u2<*> (v <$> w2))
+    --f <$> x = pure f <*> x.
+    --pure x = Leaf x
+    = Branch(u1 <*> (Leaf(v) <*> w1)) (u2 <*> (Leaf(v) <*> w2))
+    
+    Branch (u1 <*> (Leaf(v) <*> w1)) (u2 <*> (Leaf(v) <*> w2))
+    ||
+    Branch (u1 <*> (Leaf(v) <*> w1)) (u2 <*> (Leaf(v) <*> w2))
 
 -- Гомоморфизм
     pure f <*> pure x = pure (f x)
