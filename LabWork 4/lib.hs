@@ -17,22 +17,22 @@ instance Functor Singleton where
 -- (<*>) :: f (a -> b) -> f a -> f b
 instance Applicative Singleton  where
   -- TODO
-   pure = undefined
-  (<*>) = undefined
+   pure a = Singleton a
+   (Singleton f) <*> (Singleton a) = Singleton(f a)
 
 instance Monad Singleton where
   -- TODO
-  (>>=) = undefined
+  (Singleton a) >>= f = f a
 
 instance Foldable Singleton where
   -- TODO
-    foldMap = undefined
+    foldMap f (Singleton a) = f a
     -- или
     -- foldr = undefined
 
 instance Traversable Singleton where
   -- TODO
-  sequenceA = undefined
+   traverse f (Singleton a) = fmap Singleton (f a)
   -- или
   -- traverse = undefined
 
@@ -44,8 +44,8 @@ instance Functor (Productish x) where
 
 instance (Monoid a) => Applicative (Productish a) where
   -- TODO
-  pure = undefined
-  (<*>) = undefined
+  pure a = Productish mempty a
+  (Productish f g) <*> (Productish a b) = Productish(f <> a) (g b) 
 
 instance (Monoid a) => Monad (Productish a) where
   -- TODO
@@ -67,7 +67,7 @@ instance Traversable (Productish a) where
 
 
 -- data Summish a b = First a | Second b deriving (Eq, Show)
-
+-- Either
 instance Functor (Summish a) where
   -- TODO
   fmap f (First a) = First a
@@ -76,12 +76,14 @@ instance Functor (Summish a) where
 
 instance Applicative (Summish a) where
   -- TODO
-  pure = undefined
-  (<*>) = undefined
+  pure b = Second b
+  First a <*> f = First a
+  (Second b) <*> f = fmap b f
 
 instance Monad (Summish a) where
   -- TODO
-  (>>=) = undefined
+  (First a) >>= f = First a 
+  (Second a) >>= f = f a
 
 instance Foldable (Summish a) where
   -- TODO
@@ -98,7 +100,7 @@ instance Traversable (Summish a) where
 
 -- Optional
 -- data Optional a = NoValue | HasValue a deriving (Eq, Show)
-
+-- аналог Maybe
 instance Functor Optional where
   -- TODO
   fmap f NoValue = NoValue
@@ -106,22 +108,28 @@ instance Functor Optional where
 
 instance Applicative Optional where
   -- TODO
-  pure = undefined
-  (<*>) = undefined
+  pure a = HasValue a
+  NoValue <*> a = NoValue
+  HasValue f <*> a = f <$> a 
+  -- (<*>) = undefined
 
 instance Monad Optional where
   -- TODO
-  (>>=) = undefined
+  -- (>>=) = undefined
+  NoValue >>= f  =  NoValue
+  HasValue x  >>= f  =  f x
 
 instance Foldable Optional where
   -- TODO
-    foldMap = undefined
+    foldMap f NoValue = mempty
+    foldMap f (HasValue x) = f x
     -- или
     -- foldr = undefined
 
 instance Traversable Optional where
   -- TODO
-  sequenceA = undefined
+  traverse f (HasValue a) = fmap HasValue (f a)
+  traverse f NoValue = pure (NoValue)
   -- или
   -- traverse = undefined
 
@@ -136,8 +144,11 @@ instance Functor NotQuiteList where
 
 instance Applicative NotQuiteList where
   -- TODO
-  pure = undefined
-  (<*>) = undefined
+  pure a = Value a
+  Value f <*> Value x = Value (f x)
+  Value f <*> Layer (a) = Layer (f <$> a)
+  Layer f <*> a = Layer (f <*> a)
+  -- (<*>) = undefined
 
 instance Monad NotQuiteList where
   -- TODO
@@ -165,7 +176,7 @@ instance Functor NotEmpty where
 
 instance Applicative NotEmpty where
   -- TODO
-  pure = undefined
+  pure a = LastValue a
   (<*>) = undefined
 
 instance Monad NotEmpty where
